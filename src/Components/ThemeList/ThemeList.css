@@ -30,8 +30,17 @@
 	width: 5%;
 	padding-left: 10px;
 }
+.filter{
+	margin: 15px;
+}
 .name{
 	width: 95%;
 	text-align: center;
 	cursor: pointer;
+}
+.filtername{
+	font-size: 17px;
+	letter-spacing: .5px;
+	word-spacing: 6px;
+	font-weight: 550;
 }

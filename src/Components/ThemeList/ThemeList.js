@@ -6,22 +6,47 @@ class ThemeList extends React.Component{
 		super(props);
 		this.state={
 			themes:[],
+			filteredThemes:[],
 			themeList:true,
-			key:null
+			key:null,
+			filter:false
 		}
 	}
 	componentDidMount(){
 	fetch('https://newprod.zypher.co/admin/themes/getAllThemes')
     .then(response=>response.json())
-    .then(data=>this.setState({themes:data.themes}))
+    .then(data=>this.setState({themes:data.themes,filteredThemes:data.themes}))
 	}
 	onThemeDetail = (i)=>{
 		console.log(i);
 		this.setState({themeList:false,key:i});
 	}
+
+	onFilter = (e)=>{
+		//console.log(e.target.checked);
+		this.setState({filter:e.target.checked},this.update);
+		//console.log(this.state.filter);
+		
+	}
+
+	update(){
+		if(this.state.filter === true)
+		{
+			var b=this.state.themes;
+			var a=b.filter((theme,i)=>{
+				return theme.inHomePage;
+			});
+			this.setState({filteredThemes:a});
+			
+		}
+		else{
+			this.setState({filteredThemes:this.state.themes})
+		}
+	}
 	render(){
-		const {themes,themeList} = this.state;
+		const {themeList,filteredThemes} = this.state;
 		//console.log(themes[0]);
+
 		return(
 			<div className="theme_list">
 				
@@ -32,9 +57,13 @@ class ThemeList extends React.Component{
 							<div className="serial">#</div>
 							<div className="content">Name</div>
 						</div>
+						<div>
+							<input className="filter" type="checkbox" onChange={this.onFilter} />
+							<span className="filtername">InHomePage Filter</span>
+						</div>
 						<div className="all_theme_name">
 						{
-								themes.map((theme,i)=>{
+								filteredThemes.map((theme,i)=>{
 								return (
 									<div className="theme_name" key={theme._id}>
 										<div className="number">
@@ -51,7 +80,7 @@ class ThemeList extends React.Component{
 						}
 					 	</div>
 					 </div>
-					 :<ThemeDetail  themes={themes[this.state.key]} />
+					 :<ThemeDetail  themes={filteredThemes[this.state.key]} />
 				}
 			</div>
 			);
